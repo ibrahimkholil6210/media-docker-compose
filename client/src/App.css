@@ -8,6 +8,7 @@
 .MediaCardContainer {
   display: flex;
   gap: 16px;
+  flex-wrap: wrap;
 }
 
 .FilterData select{
@@ -17,9 +18,20 @@
 }
 
 .MediaCard {
-  width: calc(100% / 4);
+  width: calc((100% / 4 - 16px + 16px / 4));
 }
 
 .MediaCard img {
   border-radius: 10px;
+}
+
+.Pagination {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.Pagination button{
+  padding: 4px 7px;
 }

@@ -1,5 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import MediaCard from "./components/MediaCard";
+import Pagination from "./components/Pagination";
 import "./App.css";
+import useFetchUrls from "./hooks/useFetchUrls";
 
 const MediaType = [
   { id: 1, type: "all" },
@@ -8,24 +11,9 @@ const MediaType = [
 ];
 
 function App() {
-  const [mediaUrls, setMediaUrls] = useState({
-    totalCount: 0,
-    list: [],
-  });
+  const [mediaUrls, fetchMediaUrls] = useFetchUrls();
   const [page, setPage] = useState(0);
   const limit = 10;
-
-  const fetchMediaUrls = async (limit, offset = 0, type = "all") => {
-    const urls = await fetch(
-      `http://localhost:8080/api/v1/media?offset=${offset}&limit=${limit}&type=${type}`
-    );
-    const transfromUrls = await urls.json();
-    setMediaUrls(transfromUrls);
-  };
-
-  useEffect(() => {
-    fetchMediaUrls(limit);
-  }, []);
 
   const paginateData = (pageNo) => {
     setPage(pageNo);
@@ -63,6 +51,7 @@ function App() {
           listPerPage={10}
           totalData={mediaUrls?.totalCount}
           paginateData={paginateData}
+          className="Pagination"
         />
       </div>
     </>
@@ -70,34 +59,3 @@ function App() {
 }
 
 export default App;
-
-const MediaCard = ({ media }) => {
-  return (
-    <div className="MediaCard">
-      <img src={media?.src} alt="img" width={"100%"} />
-    </div>
-  );
-};
-
-export const Pagination = ({
-  listPerPage,
-  totalData,
-  paginateData,
-  className,
-}) => {
-  const pageNumbers = [];
-
-  for (let i = 1; i <= Math.ceil(totalData / listPerPage); i++) {
-    pageNumbers.push(i);
-  }
-
-  return (
-    <div className={className}>
-      {pageNumbers.map((page, index) => (
-        <button key={index} onClick={() => paginateData(page)} label={page}>
-          {page}
-        </button>
-      ))}
-    </div>
-  );
-};
