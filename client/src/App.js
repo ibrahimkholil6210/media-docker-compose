@@ -1,8 +1,8 @@
 import { useState } from "react";
 import MediaCard from "./components/MediaCard";
 import Pagination from "./components/Pagination";
-import "./App.css";
 import useFetchUrls from "./hooks/useFetchUrls";
+import "./App.css";
 
 const MediaType = [
   { id: 1, type: "all" },
