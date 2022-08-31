@@ -23,7 +23,7 @@ app.all("*", (req, res) => {
   });
 });
 
-cron.schedule("*/5 * * * * *", runningScrapeJob);
+cron.schedule("0 */5 * * * *", runningScrapeJob);
 
 const PORT = process.env.PORT || 8080;
 

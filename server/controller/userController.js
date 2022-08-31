@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 const User = require("../models").User;
 const { registerValidator, loginValidator } = require("../helper/validator");
 
@@ -33,19 +33,26 @@ exports.LoginUser = async (req, res) => {
   const { error } = loginValidator(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const user = await User.findOne({ where: { email: req.body.email } });
-  if (!user) return res.status(400).send("Email is not correct");
+  try {
+    const user = await User.findOne({ where: { email: req.body.email } });
+    if (!user) return res.status(400).send("Email is not correct");
 
-  const validPassword = await bcrypt.compare(req.body.password, user.password);
-  if (!validPassword) return res.status(400).send("Invalid password");
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      user.password
+    );
+    if (!validPassword) return res.status(400).send("Invalid password");
 
-  const token = jwt.sign(
-    {
-      id: user.id,
-      exp: Math.floor(Date.now() / 1000) + 60 * 10,
-    },
-    process.env.TOKEN_SECRET
-  );
+    const token = jwt.sign(
+      {
+        id: user.id,
+        exp: Math.floor(Date.now() / 1000) + 60 * 10,
+      },
+      process.env.TOKEN_SECRET
+    );
 
-  res.header("authorization", token).send(token);
+    res.header("authorization", token).send(token);
+  } catch (err) {
+    res.status(500).send("Internal Server error");
+  }
 };

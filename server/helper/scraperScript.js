@@ -3,15 +3,14 @@ const Scrape = require("../models").Scrape;
 const Media = require("../models").Media;
 
 const runningScrapeJob = async () => {
-  const totalCount = await Scrape.count();
-  const castTotalToRows = Array.from(Array(totalCount).keys());
-  for (let num in castTotalToRows) {
+  const totalCount = await Scrape.findAll();
+  for (let num of totalCount) {
     const row = await Scrape.findOne({
-      where: { id: Number(num) + 1 },
+      where: { id: Number(num.id) },
     });
     await scrapeData(row?.url);
     await Scrape.destroy({
-      where: { id: Number(num) + 1 },
+      where: { id: Number(num.id) },
     });
   }
 };
@@ -21,7 +20,8 @@ const scrapeData = async (url) => {
   try {
     const browser = await puppeteer.launch({
       headless: true,
-      devtools: true,
+      executablePath: process.env.CHROMIUM_PATH,
+      args: ["--no-sandbox"],
     });
     const page = await browser.newPage();
     await page.goto(url, { waitUntil: "load", timeout: 0 });
