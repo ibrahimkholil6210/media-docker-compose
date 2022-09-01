@@ -6,7 +6,7 @@ const runningScrapeJob = async () => {
   /*
     For the demo app i'm pulling all urls at once and scraping
     But for real world application we can fetch N number of rows
-    at a time and scrape.
+    at a time and batch them to scrape at once.
 
     In this solution a error occur while scrpaing it will be delete also
     but for real world application we can have a column in Scrape table
